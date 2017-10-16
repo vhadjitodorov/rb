@@ -1,4 +1,5 @@
-I've got two solutions for the given task - a basic and an advanced. I have implemented the bacic one, which contains the essentials for the required setup to function. The advanced proposes what can be improved, scaled and automated with additional resources.
+
+ solutions for the given task - a basic and an advanced. I have implemented the bacic one, which contains the essentials for the required setup to function. The advanced proposes what can be improved, scaled and automated with additional resources.
 
 
 ## Basic solution (implemented)
@@ -9,34 +10,34 @@ I've got two solutions for the given task - a basic and an advanced. I have impl
 
 My Solution consists of the following elements:
 - Cloudflare entry point
-        - Hides the HA proxy IP address
-        - DDoS protection
-        - Web app firewall
+  - Hides the HA proxy IP address
+  - DDoS protection
+  - Web app firewall
 - Caching CDN
 - HA proxy
 - GitLab app Docker containers
-        - Hosts only the app, no DB, user files, logs, etc.
-        - nginx
-        - Straightforward deployment of app updates
-        - Easy to lock package version dependencies
-        - Session data is kept on the DB or file storage
+  - Hosts only the app, no DB, user files, logs, etc.
+  - nginx
+  - Straightforward deployment of app updates
+  - Easy to lock package version dependencies
+  - Session data is kept on the DB or file storage
 - PostgreSQL / MySQL DB cluster
 - File storage
-        - Keeps the user files from the app, logs
-        - Stores container images
+  - Keeps the user files from the app, logs
+  - Stores container images
 - Redis cluster
 - Logic monitor collector
 - McAffee EPO
 - Salt Master
-        - Keeps the states for the different roles:
-                - HA proxy
-                - Container hosts
-                - Jumpbox
-                - …
-        - States are stored in a GIT repo on the file server
+  - Keeps the states for the different roles:
+    - HA proxy
+    - Container hosts
+    - Jumpbox
+    - …
+  - States are stored in a GIT repo on the file server
 - Jumpbox
-        - 2FA
-        - The infrastructure is not visible from the outside world
+  - 2FA
+  - The infrastructure is not visible from the outside world
 
 Notes:
 1. Preferred OS is RHEL 7.
