@@ -1,4 +1,4 @@
-schedule:
-  highstate:
-    function: state.highstate
-    minutes: 60
+highstate:
+  schedule.present:
+    - function: state.highstate
+    - minutes: 60

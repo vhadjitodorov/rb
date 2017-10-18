@@ -12,11 +12,16 @@ rpm -ivh epel-release-7-10.noarch.rpm
 # And get latest updates
 yum update
 
+yum install -y curl policycoreutils-python openssh-server
+systemctl enable sshd
+systemctl start sshd
+
+
 ===================================================================================================
 Salt Master
 ===================================================================================================
 hostnamectl set-hostname salt-master
-yum install salt-master
+yum install -y salt-master
 systemctl enable salt-master.service
 
 # Add firewall rule and SE Linux context
@@ -113,3 +118,17 @@ echo "grains:
     - app-server" > /etc/salt/grains
 
 systemctl restart salt-minion.service
+
+
+curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh | sudo bash
+
+EXTERNAL_URL="http://rb.chaosborn.com" yum install -y gitlab-ee
+
+
+mkdir /etc/gitlab/ssl
+sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/gitlab/ssl/rb.chaosborn.com.key -out /etc/gitlab/ssl/rb.chaosborn.com.crt
+
+# Replace http with https in external_url
+# add "nginx['redirect_http_to_https'] = true"
+vim /etc/gitlab/gitlab.rb
+gitlab-ctl reconfigure
