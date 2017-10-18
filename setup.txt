@@ -1,0 +1,115 @@
+===================================================================================================
+Common
+===================================================================================================
+# Set static IP for each server
+vim /etc/sysconfig/network-scripts/ifcfg-enp0s8
+systemctl restart network.service
+
+# Add epel repo
+wget http://dl.fedoraproject.org/pub/epel/7/x86_64/e/epel-release-7-10.noarch.rpm
+rpm -ivh epel-release-7-10.noarch.rpm
+
+# And get latest updates
+yum update
+
+===================================================================================================
+Salt Master
+===================================================================================================
+hostnamectl set-hostname salt-master
+yum install salt-master
+systemctl enable salt-master.service
+
+# Add firewall rule and SE Linux context
+echo '<?xml version="1.0" encoding="utf-8"?>
+ <service>
+   <short>salt-master</short>
+   <description>access for default salt-master tcp ports.</description>
+   <port protocol="tcp" port="4505"/>
+   <port protocol="tcp" port="4506"/>
+ </service>' > /etc/firewalld/services/salt-master.xml
+ 
+semanage fcontext -a -t firewalld_etc_rw_t -s system_u /etc/firewalld/services/salt-master.xml
+
+restorecon -vF /etc/firewalld/services/salt-master.xml
+
+firewall-cmd --permanent --zone=internal --add-service=salt-master
+firewall-cmd --reload
+firewall-cmd --zone=internal --list-services
+
+# Add single env setup to config
+mkdir /srv/salt/salt_states
+mkdir /srv/salt/salt_states
+mkdir /srv/salt/salt_pillars
+echo "file_roots:
+  base:
+    - /srv/salt/salt_states
+pillar_roots:
+  base:
+    - /srv/salt/salt_pillars" >> /etc/salt/master
+
+systemctl restart salt-master.service
+
+# After minions have been set up I add their keys
+salt-key -L
+salt-key -A *
+
+# I make a symlink in the GIT repo so my states get uploaded there.
+mkdir salt-master/
+ln -s /srv/ salt-master/
+
+mkdir /srv/pillar
+echo "'*':
+– schedule" > /srv/pillar/top.sls
+
+mkdir /srv/pillar/schedule
+echo "schedule:
+highstate:
+function: state.highstate
+minutes: 60
+maxrunning: 1" > /srv/pillar/schedule/init.sls
+
+
+===================================================================================================
+HA Proxy
+===================================================================================================
+hostnamectl set-hostname ha-proxy
+yum install salt-minion
+systemctl enable salt-minion.service
+
+#Configure minion
+echo "id: ${HOSTNAME}
+master: 192.168.56.201
+recon_default: 1000
+recon_max: 29000
+recon_randomize: True
+keysize: 2048" >> /etc/salt/minion
+
+
+echo "grains:
+  roles:
+    - ha-proxy" > /etc/salt/grains
+
+systemctl restart salt-minion.service
+
+
+===================================================================================================
+APP Server
+===================================================================================================
+hostnamectl set-hostname app-server1
+yum install salt-minion
+systemctl enable salt-minion.service
+
+#Configure minion
+echo "id: ${HOSTNAME}
+master: 192.168.56.201
+recon_default: 1000
+recon_max: 29000
+recon_randomize: True
+keysize: 2048" >> /etc/salt/minion
+
+
+echo "grains:
+  roles:
+    - app-server" > /etc/salt/grains
+
+systemctl restart salt-minion.service
