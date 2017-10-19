@@ -96,6 +96,11 @@ echo "grains:
 
 systemctl restart salt-minion.service
 
+openssl req -x509 -newkey rsa:4096 -keyout /etc/ssl/certs/rb.chaosborn.com.key -out /etc/ssl/certs/rb.chaosborn.com.crt -days 365
+openssl rsa -in rb.chaosborn.com.key -out rb.chaosborn.com.no.key
+cat rb.chaosborn.com.no.key rb.chaosborn.com.crt > rb.chaosborn.com.pem
+systemctl restart haproxy.service
+
 
 ===================================================================================================
 APP Server
