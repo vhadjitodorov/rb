@@ -45,11 +45,12 @@ My Solution consists of the following elements:
 
 Notes and additional features:
 1. Preferred OS is RHEL 7.
-2. Only the JB and HA proxy have public IP addresses. firewalld limits exposed ports to 22 for JB and 443 for HA proxy.
-3. Patching is done every other week. If there is a testing environments, pathing in testing is done a week ahead of production. Version lock or a private yum repo can be used to enforce the same packages version for both testing and prod.
-4. Scaling can be automated with LM measuring the load of the servers and issuing API calls to power up additional instances of app containers and adding them to the HA proxy.
-5. Make sure critical system processes are running as separate users - postgres, www-data, etc.
-6. Make use of SELinux security policies.
-7. Password policy is in place, root login is disabled, strong SSH crypto in enforced, set version banner to none in /etc/ssh/sshd_config
-8. The storage is encrypted
-9.
+2. Only the JB and HA proxy have public IP addresses.
+3. Incomming traffic is restricted via firewalld to allow port 22 for JB and 443 for HA proxy.
+4. Patching is done every other week. If there is a testing environments, pathing in testing is done a week ahead of production. Version lock or a private yum repo can be used to enforce the same packages version for both testing and prod.
+5. Scaling can be automated with LM measuring the load of the servers and issuing API calls to power up additional instances of app containers and adding them to the HA proxy.
+6. Make sure critical system processes are running as separate users - postgres, www-data, etc.
+7. SELinux security policies are in place and context is configured accordingly.
+8. Password policy is in place, root login is disabled, strong SSH crypto in enforced, set version banner to none in /etc/ssh/sshd_config
+9. The storage is encrypted
+
