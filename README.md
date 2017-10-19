@@ -3,7 +3,7 @@ A design and implementation of technical solution for R.B.
 
 ## Intoduction
 
-I've got two solutions for the given task - a basic and an advanced. I've implemented the basic one, which is a PoC to justify the used technologies and necessary skillset . The proposed advanced solution is way more sophisticated, adding scalability, automation and more oriented security features. This complexity however makes troubleshooting more challenging, thus monitoring and proper documentation are highly recommended.
+I've got two solutions for the given task - a basic and an advanced. I've implemented the basic one, which is a PoC to justify the used technologies and necessary skillset . The proposed advanced solution is way more sophisticated, adding scalability, automation and more security oriented features. This complexity however makes troubleshooting more challenging, thus monitoring and proper documentation are highly recommended.
 
 
 ## Basic solution (implemented)
@@ -66,6 +66,6 @@ Notes and additional features:
 5. Scaling can be automated with LM measuring the load of the servers and issuing API calls to power up additional instances of app containers and adding them to the HA proxy.
 6. Make sure critical system processes are running as separate users - postgres, www-data, etc.
 7. SELinux security policies are in place and context is configured accordingly.
-8. Password policy is in place, root login is disabled, strong SSH crypto in enforced, set version banner to none in /etc/ssh/sshd_config
-9. The storage is encrypted
+8. Password policy is in place, root login is disabled, strong SSH crypto in enforced, set version banner to none in /etc/ssh/sshd_config .
+9. The storage is encrypted.
 
