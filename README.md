@@ -8,20 +8,35 @@ I've got two solutions for the given task - a basic and an advanced. I've implem
 
 ## Basic solution (implemented)
 
+### Techical overview
+
+The implemented solution consists of the following elements:
+- HA proxy
+  - With self-signed SSL certificate
+- GitLab app servers
+- Salt master
+  - manages some files, packages, services and firewalld rules using roles
+
+Notes and additional features:
+
+1. This is not sa real cluster since files nad DB is not shared among the instances of the GitLab servers.
+2. The SSL certificate was not added in the git repo, because it's sensitive data and should not be public.
+
+
 ## Advanced solution (proposal)
 
 ### Technical overview
 
-My Solution consists of the following elements:
+My proposed solution consists of the following elements:
 - Cloudflare entry point
   - Hides the HA proxy IP address
   - DDoS protection
   - Web app firewall
-- Caching CDN
+  - Caching CDN
 - HA proxy
+  - With trusted SSL certificate
 - GitLab app Docker containers
   - Hosts only the app, no DB, user files, logs, etc.
-  - nginx
   - Straightforward deployment of app updates
   - Easy to lock package version dependencies
   - Session data is kept on the DB or file storage
